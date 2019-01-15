@@ -123,12 +123,20 @@ def check_config(config, is_local):
 
     encrypt.try_cipher(config['password'], config['method'])
 
-
+"""
+    日志一共分成5个等级，从低到高分别是：DEBUG INFO WARNING ERROR CRITICAL。
+    
+    DEBUG：详细的信息,通常只出现在诊断问题上
+    INFO：确认一切按预期运行
+    WARNING：一个迹象表明,一些意想不到的事情发生了,或表明一些问题在不久的将来(例如。磁盘空间低”)。这个软件还能按预期工作。
+    ERROR：更严重的问题,软件没能执行一些功能
+    CRITICAL：一个严重的错误,这表明程序本身可能无法继续运行
+"""
 def get_config(is_local):
     global verbose
 
     logging.basicConfig(level=logging.INFO,
-                        format='%(levelname)-s: %(message)s')
+                        format='%(levelname)-s: %(message)s')  #对日志的输出格式及方式做相关配置
     if is_local:
         shortopts = 'hd:s:b:p:k:l:m:o:c:t:vq'
         longopts = ['help', 'fast-open', 'pid-file=', 'log-file=', 'user=',
@@ -248,7 +256,7 @@ def get_config(is_local):
     config['server_port'] = config.get('server_port', 8388)
 
     logging.getLogger('').handlers = []
-    logging.addLevelName(VERBOSE_LEVEL, 'VERBOSE')
+    logging.addLevelName(VERBOSE_LEVEL, 'VERBOSE') #创建全新的日志记录级别和名称。level是数字, 而levelName是字符串
     if config['verbose'] >= 2:
         level = VERBOSE_LEVEL
     elif config['verbose'] == 1:

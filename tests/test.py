@@ -64,6 +64,32 @@ if config.client_args:
 if config.url == default_url:
     server_args.extend(['--forbidden-ip', ''])
 
+"""
+    从python2.4版本开始,可以用subprocess这个模块来产生子进程,并连接到子进程的标准输入/输出/错误中去，还可以得到子进程的返回值。
+    subprocess意在替代其他几个老的模块或者函数，比如：os.system os.spawn* os.popen* popen2.* commands.*
+    subprocess模块定义了一个类： Popen
+    def __init__(self, 
+        args, 
+        bufsize=0, 
+        executable=None,        
+        stdin=None, 
+        stdout=None, 
+        stderr=None,
+        preexec_fn=None, 
+        close_fds=False, 
+        shell=False,
+        cwd=None, 
+        env=None, 
+        universal_newlines=False,
+        startupinfo=None, 
+        creationflags=0):
+
+"""
+"""
+    server_args 是一个列表[]
+    <type 'list'>: ['python', 'shadowsocks/server.py', '-v', '-c', './workers.json', '--forbidden-ip', '']
+"""
+
 p1 = Popen(server_args, stdin=PIPE, stdout=PIPE, stderr=PIPE, close_fds=True)
 p2 = Popen(client_args, stdin=PIPE, stdout=PIPE, stderr=PIPE, close_fds=True)
 p3 = None

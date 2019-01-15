@@ -193,6 +193,7 @@ class EventLoop(object):
         events = []
         while not self._stopping:
             asap = False
+            # 获取事件
             try:
                 events = self.poll(TIMEOUT_PRECISION)
             except (OSError, IOError) as e:
@@ -207,15 +208,19 @@ class EventLoop(object):
                     import traceback
                     traceback.print_exc()
                     continue
-
+            # 找到事件对应的 handler，将事件交由它处理
             for sock, fd, event in events:
+                # 通过 fd 找到对应的 handler
+                # 一个 handler 可能对应多个 fd（reactor 模式）
                 handler = self._fdmap.get(fd, None)
                 if handler is not None:
                     handler = handler[1]
                     try:
+                        # handler 可能是 TCPRelay、UDPRelay 或 DNSResolver
                         handler.handle_event(sock, fd, event)
                     except (OSError, IOError) as e:
                         shell.print_exception(e)
+            # 计时器。每隔 10s 调用注册的 handle_periodic 函数
             now = time.time()
             if asap or now - self._last_time >= TIMEOUT_PRECISION:
                 for callback in self._periodic_callbacks:
